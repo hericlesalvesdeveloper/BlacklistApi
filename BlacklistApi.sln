@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlacklistApi", "BlacklistApi\BlacklistApi.csproj", "{745CBF9B-FAB0-4051-AC21-B25AF2BAA3F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{745CBF9B-FAB0-4051-AC21-B25AF2BAA3F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{745CBF9B-FAB0-4051-AC21-B25AF2BAA3F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{745CBF9B-FAB0-4051-AC21-B25AF2BAA3F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{745CBF9B-FAB0-4051-AC21-B25AF2BAA3F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03ED09E1-EB31-453D-8638-861B109EEAED}
+	EndGlobalSection
+EndGlobal
