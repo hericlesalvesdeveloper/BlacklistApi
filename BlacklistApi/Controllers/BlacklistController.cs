@@ -25,7 +25,7 @@ public class BlacklistController : ControllerBase
 
         blacklists.Add(entidade);
 
-        return NoContent();
+        return Ok(entidade);
 
     }
 
