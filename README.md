@@ -72,7 +72,7 @@ existe
 }
 ```
 
-**Resposta:** - `201 Created` → item criado
+**Resposta:** - `200 Ok` → item criado
 
 ------------------------------------------------------------------------
 
