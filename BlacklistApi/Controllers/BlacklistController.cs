@@ -28,18 +28,20 @@ public class BlacklistController : ControllerBase
     }
 
     [HttpPut]
-    public void AtualizaBlacklist(int posicao, Blacklist blacklistAtualizado)
+    public ActionResult<Blacklist> AtualizaBlacklist(int posicao, Blacklist blacklistAtualizado)
     {
         var blacklistExiste = blacklists
             .Find(b => b.Posicao == posicao);
 
         if (blacklistExiste is null)
         {
-            NotFound();
+            return NotFound();
         }
 
         blacklistExiste.Nome = blacklistAtualizado.Nome;
         blacklistExiste.Carro = blacklistAtualizado.Carro;
         blacklistExiste.Posicao = blacklistAtualizado.Posicao;
+
+        return NoContent();
     }
 }
