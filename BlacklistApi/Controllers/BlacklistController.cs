@@ -16,10 +16,10 @@ public class BlacklistController : ControllerBase
 
         // DTO -> Entity
         var entidade = new Blacklist
-        { 
+        {
             Id = Guid.NewGuid(),
             CarName = createBlacklist.CarName,
-            Reason = createBlacklist.Reason,    
+            Reason = createBlacklist.Reason,
             CreatedAt = DateTime.Now
         };
 
@@ -55,7 +55,7 @@ public class BlacklistController : ControllerBase
     {
         // Entity -> DTO
         var response = blacklists.Select(b => new BlacklistResponse
-        { 
+        {
             Id = b.Id,
             CarName = b.CarName,
             Reason = b.Reason,
@@ -81,7 +81,7 @@ public class BlacklistController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public ActionResult<Blacklist> Update(Guid id, UpdateBlacklistRequest updateBlacklist)
     {
         var entity = blacklists
