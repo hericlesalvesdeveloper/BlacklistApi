@@ -1,4 +1,5 @@
-﻿using BlacklistApi.Models;
+﻿using BlacklistApi.DTOs;
+using BlacklistApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlacklistApi.Controllers;
@@ -10,37 +11,87 @@ public class BlacklistController : ControllerBase
     private static List<Blacklist> blacklists = new List<Blacklist>();
 
     [HttpPost]
-    public void AddBlacklist([FromBody] Blacklist blacklist)
+    public ActionResult<CreateBlacklistRequest> Create(CreateBlacklistRequest createBlacklist)
     {
-        blacklists.Add(blacklist);
+
+        // DTO -> Entity
+        var entidade = new Blacklist
+        {
+            Id = Guid.NewGuid(),
+            CarName = createBlacklist.CarName,
+            Reason = createBlacklist.Reason,
+            CreatedAt = DateTime.Now
+        };
+
+        blacklists.Add(entidade);
+
+        return Ok(entidade);
+
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult<BlacklistResponse> GetById(Guid id)
+    {
+        var entity = blacklists
+            .Find(b => b.Id == id);
+
+        if (entity is null) return NotFound();
+
+        // Entity -> DTO
+        var response = new BlacklistResponse
+        {
+            Id = entity.Id,
+            CarName = entity.CarName,
+            Reason = entity.Reason,
+            CreatedAt = entity.CreatedAt
+
+        };
+
+        return Ok(response);
     }
 
     [HttpGet]
-    public IEnumerable<Blacklist> GetBlacklist()
+    public ActionResult<IEnumerable<BlacklistResponse>> GetAll()
     {
-        return blacklists;  
+        // Entity -> DTO
+        var response = blacklists.Select(b => new BlacklistResponse
+        {
+            Id = b.Id,
+            CarName = b.CarName,
+            Reason = b.Reason,
+            CreatedAt = b.CreatedAt
+        });
+
+        return Ok(response);
     }
 
-    [HttpDelete]
-    public void DeleteBlacklist(Blacklist blacklist)
+    [HttpDelete("{id}")]
+    public ActionResult Delete(Guid id)
     {
-        blacklists.Remove(blacklist);
-    }
+        var entity = blacklists
+            .FirstOrDefault(b => b.Id == id);
 
-    [HttpPut]
-    public ActionResult<Blacklist> AtualizaBlacklist(int posicao, Blacklist blacklistAtualizado)
-    {
-        var blacklistExiste = blacklists
-            .Find(b => b.Posicao == posicao);
-
-        if (blacklistExiste is null)
+        if (entity is null)
         {
             return NotFound();
         }
 
-        blacklistExiste.Nome = blacklistAtualizado.Nome;
-        blacklistExiste.Carro = blacklistAtualizado.Carro;
-        blacklistExiste.Posicao = blacklistAtualizado.Posicao;
+        blacklists.Remove(entity);
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<Blacklist> Update(Guid id, UpdateBlacklistRequest updateBlacklist)
+    {
+        var entity = blacklists
+            .FirstOrDefault(b => b.Id == id);
+
+        if (entity is null) return NotFound();
+
+        // DTO -> Entity 
+        entity.CarName = updateBlacklist.CarName;
+        entity.Reason = updateBlacklist.Reason;
 
         return NoContent();
     }
