@@ -14,3 +14,4 @@ public class Blacklist
     [Range(1, 15, ErrorMessage = "A posição vai de 15 até 1. Verifique e tente novamente")]
     public int Posicao { get; set; }
 }
+
