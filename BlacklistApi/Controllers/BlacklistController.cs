@@ -51,7 +51,7 @@ public class BlacklistController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<BlacklistResponse>> GetAll()
+    public ActionResult<IEnumerable<BlacklistResponse>> GetAll([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         // Entity -> DTO
         var response = blacklists.Select(b => new BlacklistResponse
@@ -62,7 +62,7 @@ public class BlacklistController : ControllerBase
             CreatedAt = b.CreatedAt
         });
 
-        return Ok(response);
+        return Ok(response.Skip(skip).Take(take));
     }
 
     [HttpDelete("{id}")]
