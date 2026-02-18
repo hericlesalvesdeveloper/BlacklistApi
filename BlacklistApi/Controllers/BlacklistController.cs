@@ -25,7 +25,7 @@ public class BlacklistController : ControllerBase
 
         blacklists.Add(entidade);
 
-        return Ok(entidade);
+        return CreatedAtAction(nameof(GetById), new { id = entidade.Id }, entidade);
 
     }
 
