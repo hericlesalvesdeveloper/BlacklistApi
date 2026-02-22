@@ -1,4 +1,5 @@
-﻿using BlacklistApi.DTOs;
+﻿using BlacklistApi.Data;
+using BlacklistApi.DTOs;
 using BlacklistApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,12 @@ namespace BlacklistApi.Controllers;
 [Route("[controller]")]
 public class BlacklistController : ControllerBase
 {
-    private static List<Blacklist> blacklists = new List<Blacklist>();
+
+    private BlacklistContext _context;
+    public BlacklistController(BlacklistContext context)
+    {
+         _context = context;
+    }
 
     [HttpPost]
     public ActionResult<CreateBlacklistRequest> Create(CreateBlacklistRequest createBlacklist)
@@ -23,7 +29,8 @@ public class BlacklistController : ControllerBase
             CreatedAt = DateTime.Now
         };
 
-        blacklists.Add(entidade);
+        _context.Add(entidade);
+        _context.SaveChanges();
 
         return CreatedAtAction(nameof(GetById), new { id = entidade.Id }, entidade);
 
@@ -32,9 +39,9 @@ public class BlacklistController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<BlacklistResponse> GetById(Guid id)
     {
-        var entity = blacklists
-            .Find(b => b.Id == id);
-
+        
+        var entity = _context.Blacklists.FirstOrDefault(x => x.Id == id);
+            
         if (entity is null) return NotFound();
 
         // Entity -> DTO
@@ -54,7 +61,7 @@ public class BlacklistController : ControllerBase
     public ActionResult<IEnumerable<BlacklistResponse>> GetAll([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         // Entity -> DTO
-        var response = blacklists.Select(b => new BlacklistResponse
+        var response = _context.Blacklists.Select(b => new BlacklistResponse
         {
             Id = b.Id,
             CarName = b.CarName,
@@ -68,7 +75,7 @@ public class BlacklistController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult Delete(Guid id)
     {
-        var entity = blacklists
+        var entity = _context.Blacklists
             .FirstOrDefault(b => b.Id == id);
 
         if (entity is null)
@@ -76,7 +83,8 @@ public class BlacklistController : ControllerBase
             return NotFound();
         }
 
-        blacklists.Remove(entity);
+        _context.Blacklists.Remove(entity);
+        _context.SaveChanges();
 
         return NoContent();
     }
@@ -84,7 +92,7 @@ public class BlacklistController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult<Blacklist> Update(Guid id, UpdateBlacklistRequest updateBlacklist)
     {
-        var entity = blacklists
+        var entity = _context.Blacklists
             .FirstOrDefault(b => b.Id == id);
 
         if (entity is null) return NotFound();
@@ -92,7 +100,8 @@ public class BlacklistController : ControllerBase
         // DTO -> Entity 
         entity.CarName = updateBlacklist.CarName;
         entity.Reason = updateBlacklist.Reason;
-
+        _context.SaveChanges();
         return NoContent();
     }
 }
+
