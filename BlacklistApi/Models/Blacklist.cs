@@ -14,5 +14,6 @@ public class Blacklist
     [StringLength(300)]
     public string Reason { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool IsDeleted { get; set; }
 }
 

@@ -16,6 +16,7 @@ public class BlacklistController : ControllerBase
          _context = context;
     }
 
+    #region Endpoints
     [HttpPost]
     public ActionResult<CreateBlacklistRequest> Create(CreateBlacklistRequest createBlacklist)
     {
@@ -40,7 +41,7 @@ public class BlacklistController : ControllerBase
     public ActionResult<BlacklistResponse> GetById(Guid id)
     {
         
-        var entity = _context.Blacklists.FirstOrDefault(x => x.Id == id);
+        var entity = _context.Blacklists.Where(b => b.IsDeleted == false).FirstOrDefault(x => x.Id == id);
             
         if (entity is null) return NotFound();
 
@@ -61,12 +62,14 @@ public class BlacklistController : ControllerBase
     public ActionResult<IEnumerable<BlacklistResponse>> GetAll([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         // Entity -> DTO
-        var response = _context.Blacklists.Select(b => new BlacklistResponse
+        var response = _context.Blacklists.Where(b => b.IsDeleted == false).Select(b => new BlacklistResponse
         {
             Id = b.Id,
             CarName = b.CarName,
             Reason = b.Reason,
-            CreatedAt = b.CreatedAt
+            CreatedAt = b.CreatedAt,
+            IsDeleted = b.IsDeleted
+            
         });
 
         return Ok(response.Skip(skip).Take(take));
@@ -83,7 +86,7 @@ public class BlacklistController : ControllerBase
             return NotFound();
         }
 
-        _context.Blacklists.Remove(entity);
+        entity.IsDeleted = true;
         _context.SaveChanges();
 
         return NoContent();
@@ -92,7 +95,7 @@ public class BlacklistController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult<Blacklist> Update(Guid id, UpdateBlacklistRequest updateBlacklist)
     {
-        var entity = _context.Blacklists
+        var entity = _context.Blacklists.Where(b => b.IsDeleted == false)
             .FirstOrDefault(b => b.Id == id);
 
         if (entity is null) return NotFound();
@@ -104,4 +107,6 @@ public class BlacklistController : ControllerBase
         return NoContent();
     }
 }
+
+#endregion
 
