@@ -6,5 +6,6 @@ public class BlacklistResponse
     public string CarName { get; set; }
     public string Reason { get; set; }
     public DateTime CreatedAt { get; set; }
+    public bool IsDeleted { get; set; }
 
 }

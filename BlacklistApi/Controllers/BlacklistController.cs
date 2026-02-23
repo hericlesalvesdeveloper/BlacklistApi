@@ -16,6 +16,7 @@ public class BlacklistController : ControllerBase
          _context = context;
     }
 
+    #region Endpoints
     [HttpPost]
     public ActionResult<CreateBlacklistRequest> Create(CreateBlacklistRequest createBlacklist)
     {
@@ -61,12 +62,14 @@ public class BlacklistController : ControllerBase
     public ActionResult<IEnumerable<BlacklistResponse>> GetAll([FromQuery] int skip = 0, [FromQuery] int take = 50)
     {
         // Entity -> DTO
-        var response = _context.Blacklists.Select(b => new BlacklistResponse
+        var response = _context.Blacklists.Where(b => b.IsDeleted == false).Select(b => new BlacklistResponse
         {
             Id = b.Id,
             CarName = b.CarName,
             Reason = b.Reason,
-            CreatedAt = b.CreatedAt
+            CreatedAt = b.CreatedAt,
+            IsDeleted = b.IsDeleted
+            
         });
 
         return Ok(response.Skip(skip).Take(take));
@@ -83,7 +86,7 @@ public class BlacklistController : ControllerBase
             return NotFound();
         }
 
-        _context.Blacklists.Remove(entity);
+        entity.IsDeleted = true;
         _context.SaveChanges();
 
         return NoContent();
@@ -104,4 +107,6 @@ public class BlacklistController : ControllerBase
         return NoContent();
     }
 }
+
+#endregion
 
